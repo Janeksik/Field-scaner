@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "measurement": "POMIAR_1",
+  "station": "FIELD SCANNER",
+  "head": "RADIO + METEO",
+  "description": "Przykładowe dane — Sanok (nie są rzeczywistym pomiarem)",
+  "frequency_unit": "MHz",
+  "signal_unit": "%",
+  "notes": "Przykład formatu importu."
+}
