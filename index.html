@@ -1,4 +1,92 @@
-<!doctype html><html lang="pl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101b2b"><title>FIELD SCANNER — Centrum pomiarowe</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script defer src="js/data.js"></script><script defer src="js/charts.js"></script><script defer src="js/app.js"></script></head><body>
-<section id="login"><div class="login-card"><div class="mark">FS<span>◉</span></div><p class="eyebrow">TWOJE CENTRUM POMIAROWE</p><h1>FIELD SCANNER</h1><p>Pomiary w terenie. Wszystko w jednym miejscu.</p><form id="login-form"><label for="password">Hasło dostępu</label><input id="password" type="password" autocomplete="current-password" required placeholder="Wpisz hasło"><button class="primary">Wejdź do panelu</button><p id="login-error" role="alert"></p></form><small>Hasło chroni tylko interfejs. Dane pomiarowe pozostają w tej przeglądarce.</small></div></section>
-<div id="app" hidden><aside><div class="brand"><b>◉ FIELD<br>SCANNER</b><small>CENTRUM POMIAROWE / 1.0</small></div><nav id="nav"></nav><div class="side-bottom">ESP32 · MODULAR SYSTEM<button id="logout">Wyloguj</button></div></aside><main><header><div><p class="eyebrow">FIELD SCANNER / WORKSPACE</p><h1 id="title">Menu</h1></div><button class="primary" id="import-shortcut">+ Importuj pomiar</button></header><div class="toolbar"><label>Aktywny pomiar <select id="session"></select></label><span id="mode"></span></div><div id="notice" role="status"></div><div id="content"></div><footer>FIELD SCANNER <span>RADIO / METEO / GPS</span></footer></main></div>
-</body></html>
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101b2b">
+  <title>FIELD SCANNER — Centrum pomiarowe</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <script defer
+          src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="data.js"></script>
+  <script defer src="charts.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+
+  <section id="login">
+    <div class="login-card">
+      <div class="mark">FS<span>◉</span></div>
+      <p class="eyebrow">TWOJE CENTRUM POMIAROWE</p>
+      <h1>FIELD SCANNER</h1>
+      <p>Pomiary w terenie. Wszystko w jednym miejscu.</p>
+
+      <form id="login-form">
+        <label for="password">Hasło dostępu</label>
+        <input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          required
+          placeholder="Wpisz hasło">
+        <button class="primary">Wejdź do panelu</button>
+        <p id="login-error" role="alert"></p>
+      </form>
+
+      <small>
+        Hasło chroni tylko interfejs.
+        Dane pomiarowe pozostają w tej przeglądarce.
+      </small>
+    </div>
+  </section>
+
+  <div id="app" hidden>
+    <aside>
+      <div class="brand">
+        <b>◉ FIELD<br>SCANNER</b>
+        <small>CENTRUM POMIAROWE / 1.0</small>
+      </div>
+
+      <nav id="nav"></nav>
+
+      <div class="side-bottom">
+        ESP32 · MODULAR SYSTEM
+        <button id="logout">Wyloguj</button>
+      </div>
+    </aside>
+
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">FIELD SCANNER / WORKSPACE</p>
+          <h1 id="title">Menu</h1>
+        </div>
+        <button class="primary" id="import-shortcut">
+          + Importuj pomiar
+        </button>
+      </header>
+
+      <div class="toolbar">
+        <label>
+          Aktywny pomiar
+          <select id="session"></select>
+        </label>
+        <span id="mode"></span>
+      </div>
+
+      <div id="notice" role="status"></div>
+      <div id="content"></div>
+
+      <footer>
+        FIELD SCANNER
+        <span>RADIO / METEO / GPS</span>
+      </footer>
+    </main>
+  </div>
+
+</body>
+</html>
