@@ -1,6 +1,6 @@
 # FIELD SCANNER — strona na GitHub Pages
 
-Gotowa aplikacja po polsku, bez instalowania npm ani kompilowania. Hasło interfejsu: **2013**.
+Gotowa aplikacja po polsku, bez instalowania npm ani kompilowania. Hasło interfejsu: **2883**.
 
 ## Uruchomienie na GitHub
 
@@ -81,6 +81,5 @@ Hasło 2013 jest blokadą interfejsu, widoczną w kodzie JavaScript. Nie chroni 
 - examples — trzy przykładowe pliki.
 - .nojekyll — wyłącza przetwarzanie Jekyll.
 
-Przy aktualizacji zastąp wskazane pliki w GitHub, zachowując strukturę katalogów. Zapisana historia pozostaje w przeglądarce, jeśli adres strony i klucz zapisu nie ulegną zmianie. Nie ma bezpośredniej komunikacji z ESP32; ta wersja korzysta z importu plików z karty.
 
 Lokalny podgląd: otwórz index.html w przeglądarce. Dla najbardziej przewidywalnego zachowania uruchom z katalogu projektu `python -m http.server 8000` i wejdź na http://localhost:8000.
