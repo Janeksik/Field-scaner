@@ -1,74 +1,1505 @@
 <!doctype html>
+
 <html lang="pl">
+
 <head>
+
 <meta charset="utf-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <meta name="theme-color" content="#09101c">
+
 <title>FIELD SCANNER</title>
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
 <style>
+
 :root{color-scheme:dark;--bg:#09101c;--panel:#121e30;--line:#26364d;--text:#edf5ff;--muted:#99acc7;--accent:#4ce4c1}
+
 *{box-sizing:border-box}
+
 body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}
+
 button,input,select{font:inherit}
+
 button,select,input{border:1px solid var(--line);border-radius:12px;padding:11px 14px;background:#17253a;color:var(--text)}
+
 button{cursor:pointer;transition:background .2s,transform .2s}
+
 button:hover{background:#233851;transform:translateY(-2px)}
+
 button:active{transform:scale(.97)}
+
 button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
 .primary{background:var(--accent);color:#082b29;border-color:var(--accent);font-weight:750}
+
 .primary:hover{background:#83f1d9}
+
 h1,h2,h3,p{margin-top:0}
+
 h1{font-size:30px;letter-spacing:-1px;margin-bottom:4px}
+
 h2{font-size:19px}
+
 small,.muted{color:var(--muted)}
+
 [hidden]{display:none!important}
+
 .logo{width:48px;height:48px;color:var(--accent);flex:none}
+
 .brand{display:flex;align-items:center;gap:12px}
+
 .brand b{letter-spacing:1.5px;line-height:1.2}
+
 .brand small{display:block;font-size:10px;margin-top:5px}
+
 aside{position:fixed;inset:0 auto 0 0;width:230px;background:#0d1625;border-right:1px solid var(--line);padding:28px 18px;display:flex;flex-direction:column;z-index:500}
+
 nav{display:grid;gap:8px;margin-top:35px}
+
 nav button{text-align:left;border:0;background:transparent;color:var(--muted)}
+
 nav button.active{background:#4ce4c114;color:var(--accent);box-shadow:inset 3px 0 var(--accent)}
+
 .side-footer{margin-top:auto;font-size:12px;color:var(--muted)}
+
 main{margin-left:230px;padding:30px;max-width:1800px}
+
 header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:25px}
+
 header p{margin:0}
+
 .actions{display:flex;gap:8px;flex-wrap:wrap}
+
 .badge{display:inline-block;padding:5px 10px;border-radius:20px;background:#4ce4c113;color:var(--accent);font-size:12px;border:1px solid #4ce4c133}
+
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}
+
 .card{background:linear-gradient(135deg,#152238,#111b2b);border:1px solid var(--line);border-radius:18px;padding:20px}
+
 .card .number{font-size:30px;letter-spacing:-1px;font-weight:750;margin:9px 0 2px}
+
 .card .label{color:var(--muted);font-size:13px}
+
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:20px}
+
 .section{animation:enter .35s both}
+
 .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+
 .controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+
 .controls label{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+
 input[type=range]{accent-color:var(--accent);width:110px;padding:0}
+
 input[type=checkbox]{accent-color:var(--accent)}
+
 .map-wrap{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+
 #map{height:560px;background:#102234}
+
 .legend{position:absolute;bottom:24px;left:12px;z-index:450;width:220px;background:#0b1525ed;border:1px solid #38506b;border-radius:12px;padding:12px;pointer-events:none}
+
 .legend-bar{height:9px;border-radius:5px;background:linear-gradient(90deg,#3958d7,#2cc7e8,#59df8a,#f2de45,#ff8640,#ec407b);margin:8px 0}
+
 .legend-values{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+
 .note{font-size:12px;color:var(--muted);margin:12px 0 0}
+
 .charts{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
 canvas.chart{width:100%;height:230px;display:block}
+
 .table-wrap{overflow:auto;max-height:550px}
+
 table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:13px}
+
 th,td{padding:12px;text-align:left;border-bottom:1px solid var(--line)}
+
 th{position:sticky;top:0;background:#17253b;color:var(--muted);z-index:1}
+
 tr:hover td{background:#ffffff04}
+
 .empty{text-align:center;padding:30px;color:var(--muted)}
+
 .drop{border:2px dashed #3a536e;border-radius:16px;padding:35px;text-align:center;background:#0c1625}
+
 .drop.drag{border-color:var(--accent);background:#4ce4c109}
+
 .history-item{display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid var(--line);padding:16px 0}
+
 .history-item:last-child{border:0}
+
 #intro{position:fixed;inset:0;z-index:2000;background:#09101c;display:grid;place-items:center;transition:opacity .4s}
+
 .intro-content{text-align:center;animation:enter .7s both}
+
 #intro .logo{width:115px;height:115px;filter:drop-shadow(0 0 25px #4ce4c155)}
+
 .intro-title{font-size:28px;letter-spacing:5px;font-weight:800;margin:22px 0 5px}
+
 .track{width:190px;height:3px;background:#203247;margin:25px auto;overflow:hidden;border-radius:4px}
-.track i{display
+
+.track i{display:block;height:100%;background:var(--accent);animation:load 3s linear both}
+
+#skip{position:absolute;right:20px;bottom:20px}
+
+#toast{position:fixed;bottom:25px;right:25px;max-width:90vw;padding:13px 20px;background:#20374b;border:1px solid #4ce4c155;border-radius:12px;z-index:3000;box-shadow:0 12px 40px #0007}
+
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#132239;color:#edf5ff}
+
+.leaflet-container{font-family:inherit}
+
+.leaflet-control-layers{background:#142137;color:#fff}
+
+.leaflet-bar a{background:#142137;color:#fff;border-bottom-color:#38506b}
+
+.leaflet-bar a:hover{background:#233851}
+
+@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+@keyframes load{from{width:0}to{width:100%}}
+
+@media(max-width:1000px){
+
+.grid{grid-template-columns:repeat(2,1fr)}
+
+aside{width:190px}
+
+main{margin-left:190px;padding:20px}
+
+.charts{grid-template-columns:1fr}
+
+}
+
+@media(max-width:700px){
+
+aside{position:sticky;top:0;width:100%;padding:12px;border-right:0;border-bottom:1px solid var(--line)}
+
+aside .brand .logo{width:33px;height:33px}
+
+aside .brand b{font-size:13px}
+
+aside .brand small,.side-footer{display:none}
+
+nav{display:flex;overflow:auto;gap:5px;margin-top:10px}
+
+nav button{white-space:nowrap;padding:9px 11px;font-size:12px;flex:none}
+
+main{margin:0;padding:15px}
+
+header{align-items:flex-start;flex-direction:column}
+
+h1{font-size:25px}
+
+.grid{gap:10px}
+
+.card{padding:15px}
+
+.card .number{font-size:25px}
+
+.panel{padding:14px}
+
+#map{height:480px}
+
+.controls{gap:10px}
+
+.controls label{flex-wrap:wrap}
+
+select{max-width:100%;font-size:13px}
+
+.history-item{align-items:flex-start;flex-direction:column}
+
+#toast{bottom:15px;right:15px}
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+
+}
+
+@media print{
+
+aside,header .actions,.toolbar button,#intro,#toast{display:none!important}
+
+main{margin:0;padding:0}
+
+body{background:white;color:black}
+
+.panel,.card{background:white;color:black;break-inside:avoid}
+
+.section[hidden]{display:block!important}
+
+#map{height:400px}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+
+<symbol id="scanner-logo" viewBox="0 0 64 64">
+
+<path d="M19 7H7v12M45 7h12v12M7 45v12h12M57 45v12H45"
+
+fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+
+<circle cx="32" cy="32" r="19" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/>
+
+<circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="2" opacity=".55"/>
+
+<path d="M32 32 47 17" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+
+<circle cx="32" cy="32" r="4" fill="currentColor"/>
+
+<circle cx="23" cy="22" r="3" fill="currentColor"/>
+
+<circle cx="43" cy="41" r="3" fill="currentColor"/>
+
+</symbol>
+
+</svg>
+
+
+
+<div id="intro">
+
+<div class="intro-content">
+
+<svg class="logo"><use href="#scanner-logo"/></svg>
+
+<div class="intro-title">FIELD SCANNER</div>
+
+<div class="muted">Zobacz więcej. Zmierz dokładniej.</div>
+
+<div class="track"><i></i></div>
+
+</div>
+
+<button id="skip">Pomiń intro</button>
+
+</div>
+
+
+
+<aside>
+
+<div class="brand">
+
+<svg class="logo"><use href="#scanner-logo"/></svg>
+
+<div><b>FIELD<br>SCANNER</b><small>CENTRUM POMIAROWE</small></div>
+
+</div>
+
+<nav aria-label="Nawigacja">
+
+<button class="active" data-page="overview">◈ Pulpit</button>
+
+<button data-page="maps">◎ Mapa i warstwy</button>
+
+<button data-page="radio">⌁ Radio</button>
+
+<button data-page="measurements">▦ Pomiary</button>
+
+<button data-page="imports">↥ Import danych</button>
+
+<button data-page="archive">◷ Historia</button>
+
+</nav>
+
+<div class="side-footer">FIELD SCANNER<br>Twoje pomiary. Jeden widok.<br><br><span class="badge">● Gotowy</span></div>
+
+</aside>
+
+
+
+<main>
+
+<header>
+
+<div>
+
+<h1 id="page-title">Pulpit pomiarowy</h1>
+
+<p class="muted" id="dataset-label">Ładowanie danych…</p>
+
+</div>
+
+<div class="actions">
+
+<button id="demo">Dane demo</button>
+
+<button id="export">Eksport CSV</button>
+
+<button id="print">PDF / Druk</button>
+
+</div>
+
+</header>
+
+
+
+<div id="stats" class="grid"></div>
+
+
+
+<section id="overview" class="section">
+
+<div class="panel">
+
+<div class="toolbar">
+
+<div><h2 style="margin-bottom:4px">Przegląd pomiarów</h2><small>Zmiany wartości w kolejności rejestracji</small></div>
+
+<span id="mode-badge" class="badge">Dane demonstracyjne</span>
+
+</div>
+
+<div class="charts">
+
+<div><h3>Temperatura</h3><canvas id="temp-chart" class="chart"></canvas></div>
+
+<div><h3>Sygnał radiowy</h3><canvas id="radio-chart" class="chart"></canvas></div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>Przestrzeń pełna danych</h2>
+
+<p class="muted">Przełączaj kolorowe warstwy temperatury, wysokości, wilgotności, ciśnienia i sygnału radiowego. Wczytaj własny plik CSV, aby zobaczyć swoje pomiary.</p>
+
+<button class="primary" data-go="maps">Otwórz mapę →</button>
+
+<button data-go="imports">Wczytaj CSV</button>
+
+</div>
+
+</section>
+
+
+
+<section id="maps" class="section" hidden>
+
+<div class="panel" id="map-panel">
+
+<div class="toolbar">
+
+<h2 id="map-heading" style="margin:0">Mapa pomiarowa</h2>
+
+<div class="controls">
+
+<label>Warstwa
+
+<select id="layer">
+
+<option value="temp">Temperatura</option>
+
+<option value="altitude">Wysokość</option>
+
+<option value="humidity">Wilgotność</option>
+
+<option value="pressure">Ciśnienie</option>
+
+<option value="radio">Sygnał radiowy</option>
+
+<option value="wind">Prędkość wiatru</option>
+
+</select>
+
+</label>
+
+<label id="frequency-label" hidden>Częstotliwość
+
+<select id="frequency"><option value="">Wszystkie</option></select>
+
+</label>
+
+</div>
+
+</div>
+
+<div class="controls" style="margin-bottom:14px">
+
+<label><input id="surface" type="checkbox" checked> Kolorowa powierzchnia</label>
+
+<label><input id="points" type="checkbox" checked> Punkty</label>
+
+<label>Intensywność <input id="opacity" type="range" min="10" max="90" value="65"></label>
+
+<button id="fit">Pokaż cały pomiar</button>
+
+</div>
+
+<div class="map-wrap">
+
+<div id="map" aria-label="Mapa pomiarów"></div>
+
+<div class="legend">
+
+<b id="legend-title">Temperatura</b>
+
+<div class="legend-bar"></div>
+
+<div class="legend-values"><span id="legend-min">—</span><span id="legend-max">—</span></div>
+
+</div>
+
+</div>
+
+<p class="note" id="map-note">Kolorowa powierzchnia jest interpolacją pomiarów. Pokazuje przybliżone wartości w pobliżu punktów, a nie prognozę pogody.</p>
+
+</div>
+
+</section>
+
+
+
+<section id="radio" class="section" hidden>
+
+<div id="radio-map-slot"></div>
+
+<div class="panel">
+
+<h2>Profil sygnału</h2>
+
+<canvas id="radio-detail-chart" class="chart"></canvas>
+
+<p class="note">Sygnał w dBm: wartości bliższe zeru oznaczają silniejszy sygnał.</p>
+
+</div>
+
+</section>
+
+
+
+<section id="measurements" class="section" hidden>
+
+<div class="panel">
+
+<div class="toolbar">
+
+<h2 style="margin:0">Tabela pomiarów</h2>
+
+<input id="search" placeholder="Szukaj w pomiarach…" aria-label="Szukaj w pomiarach">
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead><tr>
+
+<th>#</th><th>Szerokość</th><th>Długość</th><th>Temp. °C</th>
+
+<th>Wilgotność %</th><th>Ciśn. hPa</th><th>Wys. m</th>
+
+<th>Radio dBm</th><th>MHz</th><th>Wiatr m/s</th>
+
+</tr></thead>
+
+<tbody id="rows"></tbody>
+
+</table>
+
+</div>
+
+<p id="row-count" class="note"></p>
+
+</div>
+
+</section>
+
+
+
+<section id="imports" class="section" hidden>
+
+<div class="panel">
+
+<h2>Wczytaj swoje pomiary</h2>
+
+<div class="drop" id="drop">
+
+<svg class="logo"><use href="#scanner-logo"/></svg>
+
+<h3 style="margin-top:15px">Plik CSV → Twoja mapa</h3>
+
+<p class="muted">Na telefonie naciśnij przycisk i wybierz plik.</p>
+
+<button id="choose" class="primary">Wybierz plik CSV</button>
+
+<input id="file" type="file" accept=".csv,text/csv" hidden>
+
+</div>
+
+<p id="import-status" role="status" class="note"></p>
+
+</div>
+
+<div class="panel">
+
+<h2>Obsługiwane kolumny</h2>
+
+<p class="muted">Pierwszy wiersz musi zawierać nazwy kolumn. Separator: przecinek, średnik lub tabulator. Współrzędne podawaj w stopniach dziesiętnych.</p>
+
+<div class="table-wrap"><table>
+
+<tr><th>Wartość</th><th>Nazwa kolumny</th></tr>
+
+<tr><td>Szerokość geograficzna</td><td>lat, latitude, szerokosc</td></tr>
+
+<tr><td>Długość geograficzna</td><td>lon, lng, longitude, dlugosc</td></tr>
+
+<tr><td>Temperatura</td><td>temp, temperature, temperatura</td></tr>
+
+<tr><td>Wilgotność</td><td>humidity, wilgotnosc</td></tr>
+
+<tr><td>Ciśnienie</td><td>pressure, cisnienie</td></tr>
+
+<tr><td>Wysokość</td><td>altitude, height, wysokosc</td></tr>
+
+<tr><td>Sygnał radiowy</td><td>radio, rssi, signal, dbm</td></tr>
+
+<tr><td>Częstotliwość MHz</td><td>frequency, freq, mhz</td></tr>
+
+<tr><td>Wiatr m/s</td><td>wind, wind_speed, wiatr</td></tr>
+
+</table></div>
+
+<p class="note">Brakujące wartości pozostają puste. Nie są zastępowane wymyślonymi pomiarami.</p>
+
+<button id="template">Pobierz przykładowy CSV</button>
+
+</div>
+
+</section>
+
+
+
+<section id="archive" class="section" hidden>
+
+<div class="panel">
+
+<div class="toolbar">
+
+<h2 style="margin:0">Historia na tym urządzeniu</h2>
+
+<button id="save">Zapisz obecny zestaw</button>
+
+</div>
+
+<p class="note">Historia jest zapisywana w tej przeglądarce. Nie synchronizuje się między urządzeniami.</p>
+
+<div id="saved-list"></div>
+
+</div>
+
+</section>
+
+</main>
+
+
+
+<div id="toast" role="status" hidden></div>
+
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+
+"use strict";
+
+
+
+const $ = id => document.getElementById(id);
+
+const fields = {
+
+ temp:{name:"Temperatura",unit:"°C"},
+
+ altitude:{name:"Wysokość",unit:"m"},
+
+ humidity:{name:"Wilgotność",unit:"%"},
+
+ pressure:{name:"Ciśnienie",unit:"hPa"},
+
+ radio:{name:"Sygnał radiowy",unit:"dBm"},
+
+ wind:{name:"Prędkość wiatru",unit:"m/s"}
+
+};
+
+let records = [];
+
+let datasetName = "Dane demonstracyjne";
+
+let isDemo = true;
+
+let activePage = "overview";
+
+let mapObject = null;
+
+let markerGroup = null;
+
+let surfaceOverlay = null;
+
+let savedSets = [];
+
+let toastTimer;
+
+const valid = n => typeof n === "number" && Number.isFinite(n);
+
+const fmt = (n,d=1) => valid(n) ? n.toLocaleString("pl-PL",{maximumFractionDigits:d}) : "—";
+
+const escapeHTML = s => String(s).replace(/[&<>"']/g,c=>({
+
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+
+}[c]));
+
+
+
+function notify(message){
+
+ $("toast").textContent = message;
+
+ $("toast").hidden = false;
+
+ clearTimeout(toastTimer);
+
+ toastTimer = setTimeout(()=>$("toast").hidden=true,4000);
+
+}
+
+
+
+function makeDemo(){
+
+ const result=[];
+
+ for(let i=0;i<80;i++){
+
+  const x=i%10,y=Math.floor(i/10);
+
+  result.push({
+
+   lat:49.61+y*.0018+Math.sin(i*2)*.0002,
+
+   lon:22.18+x*.0024+Math.cos(i*3)*.0002,
+
+   temp:Math.round((17+x*.6+y*.28+Math.sin(i*.4)*1.8)*10)/10,
+
+   humidity:Math.round(72-x*2+y+Math.cos(i)*4),
+
+   pressure:Math.round((1014-y*.45+Math.sin(i)*.7)*10)/10,
+
+   altitude:Math.round(290+y*13+x*4+Math.sin(i*.5)*12),
+
+   radio:Math.round(-42-Math.hypot(x-2,y-3)*6+Math.sin(i)*3),
+
+   frequency:i%2?433.92:868.3,
+
+   wind:Math.round((1.4+x*.3+Math.sin(i)*.5)*10)/10
+
+  });
+
+ }
+
+ return result;
+
+}
+
+
+
+function average(key){
+
+ const values=records.map(r=>r[key]).filter(valid);
+
+ return values.length?values.reduce((a,b)=>a+b,0)/values.length:null;
+
+}
+
+
+
+function updateStats(){
+
+ const items=[
+
+  ["Punkty pomiarowe",records.length,"w obecnym zestawie"],
+
+  ["Średnia temperatura",fmt(average("temp"))+" °C","z dostępnych pomiarów"],
+
+  ["Średni sygnał",fmt(average("radio"))+" dBm","z dostępnych pomiarów"],
+
+  ["Średnia wysokość",fmt(average("altitude"),0)+" m","z dostępnych pomiarów"]
+
+ ];
+
+ $("stats").innerHTML=items.map(([label,value,note])=>
+
+  '<div class="card"><div class="label">'+label+'</div><div class="number">'+value+
+
+  '</div><small>'+note+'</small></div>').join("");
+
+ $("dataset-label").textContent=datasetName+" · "+records.length+" punktów";
+
+ $("mode-badge").textContent=isDemo?"Dane demonstracyjne":"Twoje pomiary";
+
+}
+
+
+
+function setDataset(data,name,demo=false){
+
+ records=data;
+
+ datasetName=name;
+
+ isDemo=demo;
+
+ updateStats();
+
+ updateFrequencies();
+
+ updateTable();
+
+ drawCharts();
+
+ if(mapObject)refreshMap();
+
+}
+
+
+
+const titles={
+
+ overview:"Pulpit pomiarowy",maps:"Mapa i warstwy",
+
+ radio:"Analiza radiowa",measurements:"Pomiary",
+
+ imports:"Import danych",archive:"Historia pomiarów"
+
+};
+
+
+
+function openPage(page){
+
+ activePage=page;
+
+ document.querySelectorAll(".section").forEach(el=>el.hidden=el.id!==page);
+
+ document.querySelectorAll("nav button").forEach(el=>el.classList.toggle("active",el.dataset.page===page));
+
+ $("page-title").textContent=titles[page];
+
+ if(page==="maps"||page==="radio"){
+
+  if(page==="radio"){
+
+   $("radio-map-slot").appendChild($("map-panel"));
+
+   $("layer").value="radio";
+
+  }else{
+
+   $("maps").appendChild($("map-panel"));
+
+  }
+
+  $("map-heading").textContent=page==="radio"?"Mapa sygnału radiowego":"Mapa pomiarowa";
+
+  requestAnimationFrame(()=>{
+
+   initMap();
+
+   if(mapObject){mapObject.invalidateSize();refreshMap();}
+
+   drawCharts();
+
+  });
+
+ }
+
+ if(page==="overview")requestAnimationFrame(drawCharts);
+
+ if(page==="archive")renderSaved();
+
+}
+
+
+
+document.querySelectorAll("[data-page]").forEach(b=>b.onclick=()=>openPage(b.dataset.page));
+
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>openPage(b.dataset.go));
+
+
+
+function initMap(){
+
+ if(mapObject)return;
+
+ if(!window.L){
+
+  $("map").innerHTML='<div class="empty">Biblioteka mapy nie została pobrana. Sprawdź połączenie z internetem i odśwież stronę.</div>';
+
+  return;
+
+ }
+
+ mapObject=L.map("map",{zoomControl:true}).setView([49.62,22.19],14);
+
+ const dark=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{
+
+  maxZoom:19,attribution:'&copy; OpenStreetMap &copy; CARTO'
+
+ }).addTo(mapObject);
+
+ const standard=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+
+  maxZoom:19,attribution:'&copy; OpenStreetMap'
+
+ });
+
+ L.control.layers({"Ciemna mapa":dark,"Mapa standardowa":standard},null,{position:"topright"}).addTo(mapObject);
+
+ markerGroup=L.layerGroup().addTo(mapObject);
+
+ fitMap();
+
+}
+
+
+
+function geographicRows(){
+
+ return records.filter(r=>valid(r.lat)&&valid(r.lon));
+
+}
+
+
+
+function fitMap(){
+
+ if(!mapObject)return;
+
+ const rows=geographicRows();
+
+ if(rows.length)mapObject.fitBounds(L.latLngBounds(rows.map(r=>[r.lat,r.lon])),{padding:[35,35],maxZoom:16,animate:false});
+
+}
+
+
+
+const stops=[
+
+ [57,88,215],[44,199,232],[89,223,138],
+
+ [242,222,69],[255,134,64],[236,64,123]
+
+];
+
+function colorAt(t){
+
+ t=Math.max(0,Math.min(1,t));
+
+ const z=t*(stops.length-1),i=Math.min(stops.length-2,Math.floor(z)),f=z-i;
+
+ return stops[i].map((v,k)=>Math.round(v+(stops[i+1][k]-v)*f));
+
+}
+
+function rgb(t){return "rgb("+colorAt(t).join(",")+")";}
+
+
+
+function updateFrequencies(){
+
+ const previous=$("frequency").value;
+
+ const values=[...new Set(records.map(r=>r.frequency).filter(valid))].sort((a,b)=>a-b);
+
+ $("frequency").replaceChildren(new Option("Wszystkie",""));
+
+ values.forEach(v=>$("frequency").add(new Option(fmt(v,3)+" MHz",String(v))));
+
+ if(values.some(v=>String(v)===previous))$("frequency").value=previous;
+
+}
+
+
+
+function refreshMap(){
+
+ if(!mapObject)return;
+
+ const key=$("layer").value,meta=fields[key];
+
+ const freq=$("frequency").value;
+
+ $("frequency-label").hidden=key!=="radio";
+
+ const geo=geographicRows();
+
+ const selected=geo.filter(r=>(key!=="radio"||!freq||String(r.frequency)===freq)&&valid(r[key]));
+
+ markerGroup.clearLayers();
+
+ if(surfaceOverlay){surfaceOverlay.remove();surfaceOverlay=null;}
+
+ $("legend-title").textContent=meta.name;
+
+ if(!selected.length){
+
+  $("legend-min").textContent="Brak danych";
+
+  $("legend-max").textContent="";
+
+  $("map-note").textContent="Brak pomiarów tej warstwy ze współrzędnymi GPS.";
+
+  return;
+
+ }
+
+ const values=selected.map(r=>r[key]);
+
+ const min=Math.min(...values),max=Math.max(...values);
+
+ const normalized=v=>max===min?.5:(v-min)/(max-min);
+
+ $("legend-min").textContent=fmt(min)+" "+meta.unit;
+
+ $("legend-max").textContent=fmt(max)+" "+meta.unit;
+
+ $("map-note").textContent=(isDemo?"Dane demonstracyjne. ":"")+
+
+  "Powierzchnia przedstawia przybliżenie między punktami pomiarowymi. Nie jest prognozą ani rzeczywistym pomiarem każdego miejsca.";
+
+ if($("points").checked){
+
+  selected.forEach(r=>{
+
+   L.circleMarker([r.lat,r.lon],{
+
+    radius:5,color:"#edf5ff",weight:1,fillColor:rgb(normalized(r[key])),fillOpacity:.95
+
+   }).bindPopup("<b>"+meta.name+"</b><br>"+fmt(r[key])+" "+meta.unit+
+
+   "<br><small>"+fmt(r.lat,6)+", "+fmt(r.lon,6)+
+
+   (valid(r.frequency)?"<br>"+fmt(r.frequency,3)+" MHz":"")+"</small>").addTo(markerGroup);
+
+  });
+
+ }
+
+ if($("surface").checked&&selected.length>=3)drawSurface(selected,key,min,max);
+
+}
+
+
+
+function drawSurface(rows,key,min,max){
+
+ let south=Math.min(...rows.map(r=>r.lat)),north=Math.max(...rows.map(r=>r.lat));
+
+ let west=Math.min(...rows.map(r=>r.lon)),east=Math.max(...rows.map(r=>r.lon));
+
+ const latSpan=Math.max(north-south,.0005),lonSpan=Math.max(east-west,.0005);
+
+ south-=latSpan*.08;north+=latSpan*.08;west-=lonSpan*.08;east+=lonSpan*.08;
+
+ const canvas=document.createElement("canvas");
+
+ canvas.width=210;canvas.height=150;
+
+ const ctx=canvas.getContext("2d"),data=ctx.createImageData(canvas.width,canvas.height);
+
+ const samples=rows.length>200?Array.from({length:200},(_,i)=>rows[Math.floor(i*rows.length/200)]):rows;
+
+ const cosine=Math.cos((south+north)/2*Math.PI/180);
+
+ const coords=samples.map(r=>({x:r.lon*cosine,y:r.lat,v:r[key]}));
+
+ const support=Math.max(latSpan,lonSpan*cosine)/3;
+
+ for(let y=0;y<canvas.height;y++){
+
+  const lat=north-y/(canvas.height-1)*(north-south);
+
+  for(let x=0;x<canvas.width;x++){
+
+   const lon=west+x/(canvas.width-1)*(east-west);
+
+   let weighted=0,weights=0,nearest=Infinity;
+
+   for(const p of coords){
+
+    const distance=(lon*cosine-p.x)**2+(lat-p.y)**2;
+
+    nearest=Math.min(nearest,distance);
+
+    const weight=1/Math.max(distance,1e-12);
+
+    weighted+=p.v*weight;weights+=weight;
+
+   }
+
+   const value=weighted/weights,t=max===min?.5:(value-min)/(max-min);
+
+   const c=colorAt(t),index=(y*canvas.width+x)*4;
+
+   data.data[index]=c[0];data.data[index+1]=c[1];data.data[index+2]=c[2];
+
+   data.data[index+3]=Math.round(255*Math.max(0,1-Math.sqrt(nearest)/support));
+
+  }
+
+ }
+
+ ctx.putImageData(data,0,0);
+
+ surfaceOverlay=L.imageOverlay(canvas.toDataURL(),[[south,west],[north,east]],{
+
+  opacity:Number($("opacity").value)/100,interactive:false
+
+ }).addTo(mapObject);
+
+}
+
+
+
+$("layer").onchange=refreshMap;
+
+$("frequency").onchange=refreshMap;
+
+$("surface").onchange=refreshMap;
+
+$("points").onchange=refreshMap;
+
+$("opacity").oninput=()=>{
+
+ if(surfaceOverlay)surfaceOverlay.setOpacity(Number($("opacity").value)/100);
+
+};
+
+$("fit").onclick=fitMap;
+
+
+
+function drawChart(id,key,color){
+
+ const canvas=$(id);
+
+ if(!canvas||canvas.getBoundingClientRect().width===0)return;
+
+ const width=canvas.getBoundingClientRect().width,height=230,dpr=window.devicePixelRatio||1;
+
+ canvas.width=width*dpr;canvas.height=height*dpr;
+
+ const ctx=canvas.getContext("2d");ctx.scale(dpr,dpr);
+
+ const samples=records.map((r,i)=>({value:r[key],index:i})).filter(r=>valid(r.value));
+
+ if(!samples.length){
+
+  ctx.fillStyle="#99acc7";ctx.font="14px system-ui";ctx.fillText("Brak danych",20,100);return;
+
+ }
+
+ let min=Math.min(...samples.map(r=>r.value)),max=Math.max(...samples.map(r=>r.value));
+
+ const pad=Math.max((max-min)*.1,.5);min-=pad;max+=pad;
+
+ const left=48,right=width-12,top=15,bottom=height-30;
+
+ ctx.font="11px system-ui";ctx.textAlign="right";
+
+ for(let i=0;i<=4;i++){
+
+  const y=top+(bottom-top)*i/4;
+
+  ctx.strokeStyle="#293b52";ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();
+
+  ctx.fillStyle="#99acc7";ctx.fillText(fmt(max-(max-min)*i/4),left-8,y+4);
+
+ }
+
+ const points=samples.map(r=>({
+
+  x:left+r.index/Math.max(records.length-1,1)*(right-left),
+
+  y:bottom-(r.value-min)/(max-min)*(bottom-top)
+
+ }));
+
+ const gradient=ctx.createLinearGradient(0,top,0,bottom);
+
+ gradient.addColorStop(0,color+"55");gradient.addColorStop(1,color+"00");
+
+ ctx.beginPath();ctx.moveTo(points[0].x,bottom);
+
+ points.forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(points[points.length-1].x,bottom);
+
+ ctx.closePath();ctx.fillStyle=gradient;ctx.fill();
+
+ ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+
+ ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+
+ if(points.length===1){
+
+  ctx.beginPath();ctx.arc(points[0].x,points[0].y,4,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();
+
+ }
+
+ ctx.textAlign="left";ctx.fillStyle="#99acc7";ctx.fillText("Początek pomiaru",left,height-6);
+
+ ctx.textAlign="right";ctx.fillText("Koniec",right,height-6);
+
+}
+
+function drawCharts(){
+
+ drawChart("temp-chart","temp","#4ce4c1");
+
+ drawChart("radio-chart","radio","#a998ff");
+
+ drawChart("radio-detail-chart","radio","#a998ff");
+
+}
+
+let resizeTimer;
+
+window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(drawCharts,150);});
+
+
+
+function updateTable(){
+
+ const query=$("search").value.toLowerCase().trim();
+
+ const columns=["lat","lon","temp","humidity","pressure","altitude","radio","frequency","wind"];
+
+ const matches=records.map((r,i)=>({r,i})).filter(({r,i})=>
+
+  !query||[i+1,...columns.map(k=>r[k])].join(" ").toLowerCase().includes(query));
+
+ $("rows").innerHTML=matches.slice(0,2000).map(({r,i})=>
+
+  "<tr><td>"+(i+1)+"</td>"+columns.map(k=>"<td>"+fmt(r[k],k==="lat"||k==="lon"?6:3)+"</td>").join("")+"</tr>").join("");
+
+ $("row-count").textContent=matches.length+" wyników"+
+
+  (matches.length>2000?" · tabela pokazuje pierwsze 2000":"");
+
+}
+
+$("search").oninput=updateTable;
+
+
+
+function splitCSV(text,separator){
+
+ const output=[];let row=[],value="",quoted=false;
+
+ for(let i=0;i<text.length;i++){
+
+  const c=text[i];
+
+  if(c==='"'){
+
+   if(quoted&&text[i+1]==='"'){value+='"';i++;}
+
+   else quoted=!quoted;
+
+  }else if(c===separator&&!quoted){
+
+   row.push(value);value="";
+
+  }else if((c==="\n"||c==="\r")&&!quoted){
+
+   if(c==="\r"&&text[i+1]==="\n")i++;
+
+   row.push(value);if(row.some(v=>v.trim()))output.push(row);
+
+   row=[];value="";
+
+  }else value+=c;
+
+ }
+
+ if(quoted)throw Error("Niedomknięty cudzysłów w CSV.");
+
+ row.push(value);if(row.some(v=>v.trim()))output.push(row);
+
+ return output;
+
+}
+
+function normalizeHeader(s){
+
+ return s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ł/g,"l").replace(/[^a-z0-9]/g,"");
+
+}
+
+const aliases={
+
+ lat:["lat","latitude","szerokosc","szerokoscgeograficzna"],
+
+ lon:["lon","lng","longitude","dlugosc","dlugoscgeograficzna"],
+
+ temp:["temp","temperature","temperatura","tempc","temperaturec","temperaturac"],
+
+ humidity:["humidity","wilgotnosc","rh"],
+
+ pressure:["pressure","cisnienie","pressurehpa","cisnieniehpa"],
+
+ altitude:["altitude","height","wysokosc","alt","altitudem","wysokoscm"],
+
+ radio:["radio","rssi","signal","dbm","rssidbm","signaldbm"],
+
+ frequency:["frequency","freq","mhz","frequencymhz","czestotliwosc"],
+
+ wind:["wind","windspeed","wiatr","predkoscwiatru"]
+
+};
+
+function toNumber(s){
+
+ if(s===undefined||s===null||String(s).trim()==="")return null;
+
+ const n=Number(String(s).trim().replace(/\s/g,"").replace(",","."));
+
+ return Number.isFinite(n)?n:null;
+
+}
+
+async function importFile(file){
+
+ if(!file)return;
+
+ try{
+
+  if(file.size>10*1024*1024)throw Error("Plik jest za duży. Maksymalnie 10 MB.");
+
+  const text=(await file.text()).replace(/^\uFEFF/,"");
+
+  const first=text.split(/\r?\n/)[0];
+
+  const separator=[";",",","\t"].sort((a,b)=>splitCSV(first,b)[0].length-splitCSV(first,a)[0].length)[0];
+
+  const rows=splitCSV(text,separator);
+
+  if(rows.length<2)throw Error("Plik nie zawiera pomiarów.");
+
+  const headers=rows.shift().map(normalizeHeader),positions={};
+
+  for(const [key,names] of Object.entries(aliases)){
+
+   positions[key]=headers.findIndex(h=>names.includes(h));
+
+  }
+
+  if(!Object.values(positions).some(i=>i>=0))throw Error("Nie rozpoznano nazw kolumn. Sprawdź tabelę obsługiwanych nazw.");
+
+  const data=rows.map(row=>{
+
+   const record={};
+
+   for(const [key,index] of Object.entries(positions))record[key]=index>=0?toNumber(row[index]):null;
+
+   if(valid(record.lat)&&Math.abs(record.lat)>90)record.lat=null;
+
+   if(valid(record.lon)&&Math.abs(record.lon)>180)record.lon=null;
+
+   return record;
+
+  }).filter(r=>Object.values(r).some(valid));
+
+  if(!data.length)throw Error("Nie znaleziono wartości liczbowych.");
+
+  if(data.length>20000)throw Error("Maksymalnie 20 000 punktów w jednym pliku.");
+
+  setDataset(data,file.name,false);
+
+  if(mapObject)fitMap();
+
+  $("import-status").textContent="Wczytano "+data.length+" pomiarów. Punkty z GPS: "+geographicRows().length+".";
+
+  notify("Wczytano "+file.name);
+
+ }catch(error){
+
+  $("import-status").textContent="Błąd: "+error.message;notify(error.message);
+
+ }finally{$("file").value="";}
+
+}
+
+$("choose").onclick=()=>$("file").click();
+
+$("file").onchange=e=>importFile(e.target.files[0]);
+
+$("drop").ondragover=e=>{e.preventDefault();$("drop").classList.add("drag");};
+
+$("drop").ondragleave=()=>$("drop").classList.remove("drag");
+
+$("drop").ondrop=e=>{e.preventDefault();$("drop").classList.remove("drag");importFile(e.dataTransfer.files[0]);};
+
+
+
+function downloadCSV(data,name){
+
+ const keys=["lat","lon","temp","humidity","pressure","altitude","radio","frequency","wind"];
+
+ const csv="\uFEFF"+keys.join(";")+"\r\n"+data.map(r=>keys.map(k=>valid(r[k])?r[k]:"").join(";")).join("\r\n");
+
+ const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+
+ const a=document.createElement("a");a.href=url;a.download=name;a.click();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+
+}
+
+$("export").onclick=()=>downloadCSV(records,"field-scanner-pomiary.csv");
+
+$("template").onclick=()=>downloadCSV(makeDemo(),"field-scanner-przyklad.csv");
+
+$("demo").onclick=()=>{
+
+ setDataset(makeDemo(),"Dane demonstracyjne",true);
+
+ if(mapObject)fitMap();
+
+ notify("Włączono dane demonstracyjne");
+
+};
+
+$("print").onclick=()=>window.print();
+
+
+
+function readSaved(){
+
+ try{
+
+  const data=JSON.parse(localStorage.getItem("field-scanner-sets-v3")||"[]");
+
+  savedSets=Array.isArray(data)?data.filter(s=>s&&Array.isArray(s.data)):[];
+
+ }catch{savedSets=[];}
+
+}
+
+function persistSaved(){
+
+ try{localStorage.setItem("field-scanner-sets-v3",JSON.stringify(savedSets));return true;}
+
+ catch{notify("Brak miejsca lub przeglądarka blokuje zapis historii.");return false;}
+
+}
+
+function renderSaved(){
+
+ $("saved-list").innerHTML=savedSets.length?savedSets.map((s,i)=>
+
+  '<div class="history-item"><div><b>'+escapeHTML(s.name)+'</b><br><small>'+
+
+  escapeHTML(s.date)+" · "+s.data.length+' punktów</small></div><div class="actions">'+
+
+  '<button data-load="'+i+'">Otwórz</button><button data-delete="'+i+'">Usuń</button></div></div>'
+
+ ).join(""):'<div class="empty">Nie ma zapisanych zestawów.</div>';
+
+ $("saved-list").querySelectorAll("[data-load]").forEach(b=>b.onclick=()=>{
+
+  const s=savedSets[Number(b.dataset.load)];
+
+  setDataset(s.data,s.name,!!s.demo);if(mapObject)fitMap();openPage("overview");notify("Wczytano zapisany zestaw");
+
+ });
+
+ $("saved-list").querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>{
+
+  const index=Number(b.dataset.delete),previous=savedSets.slice();
+
+  savedSets.splice(index,1);
+
+  if(!persistSaved())savedSets=previous;
+
+  renderSaved();
+
+ });
+
+}
+
+$("save").onclick=()=>{
+
+ const previous=savedSets.slice();
+
+ savedSets.unshift({
+
+  name:datasetName,date:new Date().toLocaleString("pl-PL"),
+
+  data:records.map(r=>({...r})),demo:isDemo
+
+ });
+
+ savedSets=savedSets.slice(0,8);
+
+ if(persistSaved())notify("Zapisano zestaw na tym urządzeniu");
+
+ else savedSets=previous;
+
+ renderSaved();
+
+};
+
+
+
+let introClosed=false;
+
+function closeIntro(){
+
+ if(introClosed)return;
+
+ introClosed=true;
+
+ $("intro").style.opacity="0";
+
+ setTimeout(()=>{$("intro").hidden=true;drawCharts();},400);
+
+}
+
+$("skip").onclick=closeIntro;
+
+setTimeout(closeIntro,3000);
+
+readSaved();
+
+setDataset(makeDemo(),"Dane demonstracyjne",true);
+
+</script>
+
+</body>
+
+</html>4
